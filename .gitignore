@@ -1,0 +1,7 @@
+.project
+.vagrant
+cookbooks
+*.lock
+.zero-knife.rb
+chef-zero.pem
+chef-zero.pem.pub
