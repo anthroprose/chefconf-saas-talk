@@ -1,5 +1,9 @@
 #!/usr/bin/env rake
+################### Config #####################
+# Ethernet Device to pull IP Address of HOST
 ETHERNET_DEVICE = 'wlan0'
+################################################
+
 task :default => 'install'
 
 desc "Installs prereqs"
@@ -20,4 +24,9 @@ end
 desc "Shuts down Chef-Zero"
 task :done do
   sh "killall -9 chef-zero"
+end
+
+desc "Runs Database Example"
+task :database do
+  sh "cd database;vagrant up"
 end
