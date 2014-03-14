@@ -1,24 +1,28 @@
 module ServiceOrchestration
   module MysqlWrapper
     module Helpers
-      def debian_before_squeeze?
-        (node['platform'] == 'debian') && (node['platform_version'].to_f < 6.0)
-      end
 
-      def ubuntu_before_lucid?
-        (node['platform'] == 'ubuntu') && (node['platform_version'].to_f < 10.0)
+      def publish_ssh_key
+        pubkey_loc = '/home/mysqlwrapper/.ssh/id_dsa.pub'
+        if File.exists?(pubkey_loc) then
+          node[:mysqlwrapper][:ssh_pubkey] = IO.read(pubkey_loc)
+        end
       end
+      
+      def find_ssh_key
 
-      def assign_root_password_cmd
-        str = '/usr/bin/mysqladmin'
-        str << ' -u root password '
-        str << node['mysql']['server_root_password']
       end
+      
+      def mysql_dump
 
-      def install_grants_cmd
-        str = '/usr/bin/mysql'
-        str << ' -u root '
-        node['mysql']['server_root_password'].empty? ? str << ' < /etc/mysql_grants.sql' : str << " -p#{node['mysql']['server_root_password']} < /etc/mysql_grants.sql"
+      end
+      
+      def mysql_load
+
+      end
+      
+      def mysql_slave
+
       end
     end
   end

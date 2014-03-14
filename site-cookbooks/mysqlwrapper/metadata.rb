@@ -16,4 +16,5 @@ supports 'centos'
 supports 'debian'
 supports 'ubuntu'
 
-depends 'mysql',         '~> 4.1'
+depends 'mysql', '~> 4.1'
+depends 'user', '~> 0.3'

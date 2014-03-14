@@ -40,7 +40,13 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 		mysqlmaster.vm.provision "chef_client" do |chef|
 			chef.chef_server_url = "http://#{CHEF_SERVER_IP}:8889/"
 			chef.validation_key_path = '../chef-zero.pem'
+			chef.add_recipe 'mysqlwrapper'
 			chef.add_recipe 'mysqlwrapper::master'
+			chef.json = {
+		      "mysqlwrapper" => {
+		        "ip" => "10.254.0.2"
+		      }
+    		}
 		end
 		
 	end
@@ -53,7 +59,13 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 		mysqlslave.vm.provision "chef_client" do |chef|
 			chef.chef_server_url = "http://#{CHEF_SERVER_IP}:8889/"
 			chef.validation_key_path = '../chef-zero.pem'
+			chef.add_recipe 'mysqlwrapper'
 			chef.add_recipe 'mysqlwrapper::slave'
+			chef.json = {
+		      "mysqlwrapper" => {
+		        "ip" => "10.254.0.3"
+		      }
+    		}
 		end
 		
 	end
