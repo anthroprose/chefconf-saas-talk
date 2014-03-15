@@ -7,7 +7,6 @@ default['mysqlwrapper']['sql_loc'] = 'replication.sql'
 default['mysqlwrapper']['replication_sql'] = '/var/lib/mysql/replication.sql'
 default['mysqlwrapper']['replication_sent'] = 0
 
-override['mysql']['tunable']['server_id'] = 1
 override['mysql']['tunable']['log_bin'] = 'mysql-bin'
 override['mysql']['tunable']['log_slave_updates'] = false
 override['mysql']['tunable']['binlog_format'] = 'statement'

@@ -1,5 +1,3 @@
-node.set['mysqlwrapper']['type'] = 'master'
-
 service "mysql" do
   action [ :restart ]
 end
@@ -15,6 +13,7 @@ end
 ruby_block "dump_mysql_log" do
   not_if { File.exists?(node['mysqlwrapper']['replication_sql']) }
   block do
+    Chef::Log.info("mysqldump -uroot -p#{node['mysql']['server_root_password']} --master-data=1 #{node['mysql']['tunable']['replicate_do_db']} > #{node['mysqlwrapper']['replication_sql']}")
     %x[mysqldump -uroot -p#{node['mysql']['server_root_password']} --master-data=1 #{node['mysql']['tunable']['replicate_do_db']} > #{node['mysqlwrapper']['replication_sql']}]
   end
   action :run
@@ -28,12 +27,13 @@ begin
     
     Chef::Log.info("Searching through Node: #{n.name} - Cluster: #{node['mysqlwrapper']['cluster']}")
     
-    if n.has_key?'mysqlwrapper' and n['mysqlwrapper'].has_key?'ssh_keys' then
+    if n.has_key?'mysqlwrapper' and n['mysqlwrapper'].has_key?'ssh_keys' and n['mysqlwrapper']['ssh_keys'] != ''then
+      
       Chef::Log.info("Found Slave with Credentials at Node: #{n.name} - Cluster: #{node['mysqlwrapper']['cluster']}")
       
       if File.exists?(node['mysqlwrapper']['replication_sql']) then
-        Chef::Log.info("scp -o 'StrictHostKeyChecking no' -i #{node['mysqlwrapper']['privkey_loc']} #{node['mysqlwrapper']['replication_sql']} #{node['mysqlwrapper']['user']}@#{n['mysqlwrapper']['ip']}:~/")
-        %x[scp -o 'StrictHostKeyChecking no' -i #{node['mysqlwrapper']['privkey_loc']} #{node['mysqlwrapper']['replication_sql']} #{node['mysqlwrapper']['user']}@#{n['ipaddress']}:~/]
+        Chef::Log.info("scp -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -i #{node['mysqlwrapper']['privkey_loc']} #{node['mysqlwrapper']['replication_sql']} #{node['mysqlwrapper']['user']}@#{n['mysqlwrapper']['ip']}:~/")
+        %x[scp -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -i #{node['mysqlwrapper']['privkey_loc']} #{node['mysqlwrapper']['replication_sql']} #{node['mysqlwrapper']['user']}@#{n['mysqlwrapper']['ip']}:~/]
         node.set['mysqlwrapper']['replication_sent'] = 1
       else
         Chef::Log.error("Found a Slave but Master has no SQL File at Node: #{n.name} - Cluster: #{node['mysqlwrapper']['cluster']}")

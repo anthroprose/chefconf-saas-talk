@@ -43,9 +43,15 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 			chef.add_recipe 'mysqlwrapper'
 			chef.add_recipe 'mysqlwrapper::master'
 			chef.json = {
-		      "mysqlwrapper" => {
-		        "ip" => "10.254.0.2"
-		      }
+				"mysqlwrapper" => {
+					"ip" => "10.254.0.2",
+					"type" => "master"
+		      	},
+		      	"mysql" => {
+		      		"tunable" => {
+						"server_id" => 1
+		      		}
+		      	}
     		}
 		end
 		
@@ -62,9 +68,16 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 			chef.add_recipe 'mysqlwrapper'
 			chef.add_recipe 'mysqlwrapper::slave'
 			chef.json = {
-		      "mysqlwrapper" => {
-		        "ip" => "10.254.0.3"
-		      }
+				"mysqlwrapper" => {
+					"ip" => "10.254.0.3",
+		        	"type" => "slave"
+		      	},
+		      	"mysql" => {
+		      		"tunable" => {
+		      			"server_id" => 2,
+		      			"relay_log" => "mysql-relay-bin"
+		      		}
+		      	}
     		}
 		end
 		

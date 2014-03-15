@@ -1,9 +1,10 @@
+node.set['mysql']['bind_address'] = node['mysqlwrapper']['ip']
+
 user_account node['mysqlwrapper']['user'] do
   comment       'Mysql User'
   ssh_keygen    true
   manage_home   false
   ssh_keys node[:mysqlwrapper][:ssh_keys]
-  notifies :run, "ruby_block[upload_pubkey]"
 end
 
 include_recipe 'mysql::server'
@@ -16,5 +17,5 @@ ruby_block "upload_pubkey" do
       Chef::Log.info("Saving MySQLWrapper PubKey for Node: #{node.name} - Cluster: #{node['mysqlwrapper']['cluster']}")
     end
   end
-  action :nothing
+  action :run
 end
