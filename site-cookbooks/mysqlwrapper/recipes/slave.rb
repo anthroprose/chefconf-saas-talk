@@ -1,7 +1,3 @@
-service "mysql" do
-  action [ :restart ]
-end
-
 nodes = search(:node, "mysqlwrapper_cluster:#{node['mysqlwrapper']['cluster']} AND mysqlwrapper_type:master")
 Chef::Log.info("Chef Search: mysqlwrapper_cluster:#{node['mysqlwrapper']['cluster']} AND mysqlwrapper_type:master")
 
@@ -13,15 +9,29 @@ begin
     
     if n.has_key?'mysqlwrapper' and n['mysqlwrapper'].has_key?'ssh_pubkey' and n['mysqlwrapper']['ssh_pubkey'] != '' then
       
-      node.set["mysqlwrapper"]["ssh_keys"] = n['mysqlwrapper']['ssh_pubkey']
-      Chef::Log.info("Found Public Key for Node: #{n.name} - Cluster: #{node['mysqlwrapper']['cluster']}")
-      
-      if File.exists?("/home/#{node['mysqlwrapper']['user']}/#{node['mysqlwrapper']['sql_loc']}") and %x[mysql -uroot -p#{node['mysql']['server_root_password']} -e "SHOW DATABASES"|grep #{node['mysql']['tunable']['replicate_do_db']}] == '' then
-        Chef::Log.info("Setting up Replication Slave on Node: #{node.name} - Cluster: #{node['mysqlwrapper']['cluster']}")
-        %x[mysql -uroot -p#{node['mysql']['server_root_password']} < /home/#{node['mysqlwrapper']['user']}/#{node['mysqlwrapper']['sql_loc']}]
-        Chef::Log.info("mysql -uroot -p#{node['mysql']['server_root_password']} -e \"CHANGE MASTER TO MASTER_HOST='#{n['mysqlwrapper']['ip']}',MASTER_USER='#{node['mysqlwrapper']['slave_user']}',MASTER_PASSWORD='#{n['mysql']['server_repl_password']}';\"")
-        %x[mysql -uroot -p#{node['mysql']['server_root_password']} -e "CHANGE MASTER TO MASTER_HOST='#{n['mysqlwrapper']['ip']}',MASTER_USER='#{node['mysqlwrapper']['slave_user']}',MASTER_PASSWORD='#{n['mysql']['server_repl_password']}';"]
-        %x[mysql -uroot -p#{node['mysql']['server_root_password']} -e "START SLAVE;"]
+      if node[:mysqlwrapper][:ssh_keys] != n['mysqlwrapper']['ssh_pubkey'] then
+        
+        node.set["mysqlwrapper"]["ssh_keys"] = n['mysqlwrapper']['ssh_pubkey']
+        node.set["mysqlwrapper"]["pulled_pubkey"] = 1
+        
+        user_account node['mysqlwrapper']['user'] do
+          comment       'Mysql User'
+          ssh_keygen    true
+          manage_home   false
+          ssh_keys node[:mysqlwrapper][:ssh_keys]
+          action :modify
+        end
+  
+        Chef::Log.info("Found Public Key for Node: #{n.name} - Cluster: #{node['mysqlwrapper']['cluster']}")
+        
+        mysqlwrapper_slave_replication "/home/#{node['mysqlwrapper']['user']}/#{node['mysqlwrapper']['sql_loc']}" do
+          database node['mysql']['tunable']['replicate_do_db']
+          password node['mysql']['server_root_password']
+          replication_host n['mysqlwrapper']['ip']
+          replication_user node['mysqlwrapper']['slave_user']
+          replication_password n['mysql']['server_repl_password']
+        end
+        
       end
     
     else

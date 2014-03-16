@@ -9,13 +9,10 @@ end
 
 include_recipe 'mysql::server'
 
-## Save the Pubkey to ChefServer
-ruby_block "upload_pubkey" do
-  block do
-    if File.exists?(node['mysqlwrapper']['pubkey_loc']) then
-      node.set['mysqlwrapper']['ssh_pubkey'] = IO.read(node['mysqlwrapper']['pubkey_loc'])
-      Chef::Log.info("Saving MySQLWrapper PubKey for Node: #{node.name} - Cluster: #{node['mysqlwrapper']['cluster']}")
-    end
-  end
-  action :run
+service "mysql" do
+  action [ :restart ]
+end
+
+mysqlwrapper_upload_pubkey node['mysqlwrapper']['pubkey_loc'] do
+  action :upload
 end
