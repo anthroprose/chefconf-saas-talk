@@ -12,6 +12,9 @@ action :create do
     
     ::Chef::Log.info("Setting up Replication Slave on Node: #{node.name} - Cluster: #{node['mysqlwrapper']['cluster']}")
 
+    ::Chef::Log.info("mysql -uroot -p#{@new_resource.password} -e \"STOP SLAVE;\"")
+    %x[mysql -uroot -p#{@new_resource.password} -e "STOP SLAVE;"]
+    
     ::Chef::Log.info("mysql -uroot -p#{@new_resource.password} < #{@new_resource.sqlfile}")
     %x[mysql -uroot -p#{@new_resource.password} < #{@new_resource.sqlfile}]
 
