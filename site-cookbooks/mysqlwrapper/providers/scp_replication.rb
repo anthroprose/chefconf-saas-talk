@@ -17,7 +17,7 @@ action :create do
     
   end
   
-  if ::File.exists?(@new_resource.sqlfile) and found then
+  if ::File.exists?(@new_resource.sqlfile) and not found then
     
     ::Chef::Log.info("scp -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -i #{@new_resource.identity} #{@new_resource.sqlfile} #{@new_resource.user}@#{@new_resource.host}:~/")
     %x[scp -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -i #{@new_resource.identity} #{@new_resource.sqlfile} #{@new_resource.user}@#{@new_resource.host}:~/]

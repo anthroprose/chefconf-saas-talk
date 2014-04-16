@@ -1,4 +1,4 @@
-actions :create, :remove
+actions :create, :remove, :status
 default_action :create
 
 attribute :sqlfile, :kind_of => String, :name_attribute => true

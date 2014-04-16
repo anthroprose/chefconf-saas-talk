@@ -7,12 +7,13 @@ CHEF_CLIENT_VERSION = '11.10.4'
 
 # Ethernet Device to pull IP Address of HOST
 ETHERNET_DEVICE = 'wlan0'
+
+# Also set these in the Rake file
 ################################################
 
-# Vagrantfile API/syntax version. Don't touch unless you know what you're doing!
-VAGRANTFILE_API_VERSION = '2'
 
-Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+
+Vagrant.configure(2) do |config|
 	
 	## This just finds the HOST's IP from the interface defined above (for connecting back out to chef-zero)
 	CHEF_SERVER_IP = %x[ifconfig #{ETHERNET_DEVICE} | grep 'inet addr:' | cut -d: -f2 | awk '{ print $1}'].strip
@@ -39,7 +40,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
 		mysqlmaster.vm.provision "chef_client" do |chef|
 			chef.chef_server_url = "http://#{CHEF_SERVER_IP}:8889/"
-			chef.validation_key_path = '../chef-zero.pem'
+			chef.validation_key_path = './chef-zero.pem'
 			chef.add_recipe 'mysqlwrapper'
 			chef.add_recipe 'mysqlwrapper::master'
 			chef.json = {
@@ -64,7 +65,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
 		mysqlslave.vm.provision "chef_client" do |chef|
 			chef.chef_server_url = "http://#{CHEF_SERVER_IP}:8889/"
-			chef.validation_key_path = '../chef-zero.pem'
+			chef.validation_key_path = './chef-zero.pem'
 			chef.add_recipe 'mysqlwrapper'
 			chef.add_recipe 'mysqlwrapper::slave'
 			chef.json = {

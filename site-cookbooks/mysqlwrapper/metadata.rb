@@ -18,3 +18,4 @@ supports 'ubuntu'
 
 depends 'mysql', '~> 4.1'
 depends 'user', '~> 0.3'
+depends "chef_handler"
