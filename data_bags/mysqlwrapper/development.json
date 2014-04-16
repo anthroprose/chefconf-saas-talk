@@ -1,0 +1,8 @@
+{
+	"id" : "development",
+	"mysqlwrapper" : {
+		"master_password" : "xxxxxxxxxx",
+		"slave_password" : "xxxxxxxxxx",
+		"repl_password" : "zzzzzzzzzz"
+	}
+}
