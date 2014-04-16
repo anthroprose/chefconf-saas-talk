@@ -26,7 +26,7 @@ rake magic
 * MySQL Master - MySQLDump Database/Replication SQL
 * MySQL Master - SCP Replication SQL to MySQL Slave
 * MySQL Slave - Import Replication SQL and Start Slave
-* 
+
 ## Fourth
 * MySQL Master - Insert SQL
 * MySQL Slave - Read SQL
