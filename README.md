@@ -8,6 +8,18 @@ bundle install
 rake magic
 ```
 
+```ruby
+desc "Magic Multiple Convergence and Testing"
+task :magic do
+  Rake::Task["init"].execute
+  Rake::Task["up"].execute
+  Rake::Task["converge"].execute
+  Rake::Task["converge"].execute
+  Rake::Task["customer"].execute
+  Rake::Task["slave"].execute
+end
+```
+
 # Convergences
 
 ## First
