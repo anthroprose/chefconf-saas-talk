@@ -40,6 +40,6 @@ end
 * MySQL Master - SCP Replication SQL to MySQL Slave
 * MySQL Slave - Import Replication SQL and Start Slave
 
-## Fourth
+## Final
 * MySQL Master - Insert SQL
 * MySQL Slave - Read SQL
