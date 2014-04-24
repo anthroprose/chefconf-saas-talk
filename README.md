@@ -1,7 +1,8 @@
 chefconf-saas-talk
 ==================
 
-MySQL Replication using Community Cookbooks some Gluecode with LWRPs
+MySQL Replication via Chef with Service Orchestration using Node Attributes, LWRPs, and Multiple Convergences.
+
 
 ```bash
 bundle install
