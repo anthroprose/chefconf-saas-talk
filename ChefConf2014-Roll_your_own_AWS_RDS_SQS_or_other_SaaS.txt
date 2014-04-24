@@ -14,8 +14,6 @@ Perspective
 
 * Started with hand built globally distributed workflow system using VPN and a centralized metadata store with workers for ecosystem state and business logic. Now leverage a suite of *aaS to provide faster, tightly integrated, holistic deployments. 
 
-* WebScale - 1400 new customers every day, global concurrency, 8 machines, 1 ops, 2 dev
-
 * Budget/Headcount/Time/SLA constraints always push small teams UP stack to leverage other services for specialties.
 
 * 100% AWS due to SDN and Model Defined Infrastructure requirements, along with secondary featureset
